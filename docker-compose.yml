@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+
+  system_manager:
+    build:
+      context: .
+    volumes:
+      - './src/:/usr/src/app'
+    container_name: 'system-manager-api'
+    ports:
+      - 5000:5000
+    environment:
+      - FLASK_ENV=development
+      - APP_SETTINGS=src.config.DevelopmentConfig
+      - SECRET_KEY=PB3aGvTmCkzaLGRAxDc3aMayKTPTDd5usT8gw4pCmKOk5AlJjh12pTrnNgQyOHCH
+    depends_on:
+      - database
+
+  database:
+    image: mongo:latest
+    container_name: 'system-manager-mongo'
+    environment:
+      MONGO_INITDB_DATABASE: system_manager
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
+
+volumes:
+  mongodb_data_container:
