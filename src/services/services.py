@@ -2,7 +2,6 @@
 Service
 """
 import logging
-from src.helpers import mongo
 
 logger = logging.getLogger("services")
 
@@ -10,7 +9,7 @@ logger = logging.getLogger("services")
 class Service:
 
     def all(self):
-        return mongo.db.system_manager.find({})
+        return NotImplemented
 
     def create(self, data):
-        return mongo.db.system_manager.insert(data)
+        return NotImplemented
