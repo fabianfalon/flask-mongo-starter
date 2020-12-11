@@ -1,7 +1,9 @@
 import os
+
 from flask import Flask
-from src.helpers import mongo
+
 from src.exceptions import APIException
+from src.helpers import mongo
 from src.views import BLUEPRINT as api
 
 # instantiate the extensions

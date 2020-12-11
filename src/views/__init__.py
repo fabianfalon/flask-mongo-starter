@@ -26,16 +26,16 @@ API.add_namespace(system_ns, path=URL_PREFIX)
 
 @API.errorhandler(APIException)
 def generic_api_error_handler(exception):
-    """
-    """
+    """"""
     json_message = {"messages": [exception.to_dict()]}
     return json_message, exception.status_code
 
 
 @API.errorhandler
 def generic_error_handler(exception):
-    """
-    """
-    api_exception = APIException(code=type(exception).__name__, message=str(exception), error_type="CRITICAL")
+    """"""
+    api_exception = APIException(
+        code=type(exception).__name__, message=str(exception), error_type="CRITICAL"
+    )
     json_message = {"messages": [api_exception.to_dict()]}
     return json_message, HTTP_500_INTERNAL_SERVER_ERROR

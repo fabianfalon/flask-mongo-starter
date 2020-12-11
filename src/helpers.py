@@ -1,4 +1,8 @@
+import json
+from bson import json_util
+
 from flask_pymongo import PyMongo
+
 from src.serializers.common import PaginationSchema
 
 mongo = PyMongo()
@@ -13,18 +17,23 @@ def response_list(list_name, list_response, **kwargs):
 
 
 def response_list_paginated(
-    list_name, pagination, serializer, base_link_pagination, **kwargs
+    list_name, items, serializer, base_link_pagination, **kwargs
 ):
     query_params = kwargs.get("query_params")
 
-    items = pagination.items
     response = response_list(list_name, items, serializer=serializer)
     context = {
         "base_link_pagination": base_link_pagination,
         "query_params": query_params,
     }
+
     schema = PaginationSchema(context=context)
-    pagination_field = schema.dump(pagination).data
+    pagination_field = schema.dump(items)
 
     response["pagination"] = pagination_field
+    return response
+
+
+def custom_response(item_name, items, **kwargs):
+    response = {"data": json.loads(json_util.dumps({item_name: items}))}
     return response
