@@ -14,7 +14,7 @@ from src.exceptions import Unauthorized
 
 
 class Client(Document):
-    id = StringField(default=uuid.uuid4())
+    internal_id = StringField(default=uuid.uuid4())
     status_list = ((ACTIVE, "Active client"), (INACTIVE, "Inactive client"))
     name = StringField(required=True, max_length=CLIENT_NAME_MAX_LENGTH)
     description = StringField(required=True, max_length=CLIENT_DESCRIPTION_MAX_LENGTH)
@@ -24,11 +24,11 @@ class Client(Document):
     token = StringField()
     created = DateTimeField(default=datetime.now)
 
-    def encode_auth_token(self):
+    def encode_token(self):
         try:
             payload = {
                 'iat': datetime.utcnow(),
-                "payload": {"id": self.id, "status": self.status}
+                "payload": {"external_id": self.internal_id, "status": self.status}
             }
             token = jwt.encode(
                 payload,
@@ -40,18 +40,15 @@ class Client(Document):
             return e
 
     @staticmethod
-    def decode_auth_token(token: str):
+    def decode_token(token: str):
         """
         Validates the auth token
         :param token:
         """
         try:
             payload = jwt.decode(token, current_app.config.get("SECRET_KEY"))
-            """is_blacklisted_token = BlacklistToken.check_blacklist(token)
-            if is_blacklisted_token:
-                return 'Token blacklisted. Please log in again.'"""
-
-            if payload.get("payload").get("status") == INACTIVE:
+            client_data = payload.get("payload")
+            if client_data.get("status") == ACTIVE and client_data.get("external_id"):
                 return payload
             else:
                 raise Unauthorized(message="Client Inactive.")

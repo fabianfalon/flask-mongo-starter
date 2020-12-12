@@ -14,7 +14,7 @@ def check_token(f):
 
         # Remove the 'Basic" part from the token
         auth_token = token_header.split(maxsplit=1)[1]
-        token = Client.decode_auth_token(auth_token)
+        token = Client.decode_token(auth_token)
         if not token:
             raise Unauthorized(message="Provide a valid auth token.")
         return f(*args, **kwargs)
