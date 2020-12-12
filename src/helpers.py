@@ -16,6 +16,14 @@ def response_list(list_name, list_response, **kwargs):
     return response
 
 
+def response_item(item_name, item, **kwargs):
+
+    serializer = kwargs.get("serializer")
+    schema = serializer()
+    response = {"data": {item_name: schema.dump(item)}}
+    return response
+
+
 def response_list_paginated(
     list_name, items, serializer, base_link_pagination, **kwargs
 ):

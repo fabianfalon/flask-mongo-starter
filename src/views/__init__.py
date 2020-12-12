@@ -3,6 +3,7 @@ from flask_restplus import Api
 from src.constants import API_VERSION
 from src.exceptions import APIException
 from src.views.system import API_SYSTEM as system_ns
+from src.views.client import API_CLIENT as client_ns
 
 URL_PREFIX = f"/api/{API_VERSION}/"
 
@@ -22,6 +23,7 @@ API = Api(
 
 # Registers resources from namespace for current instance of api.
 API.add_namespace(system_ns, path=URL_PREFIX)
+API.add_namespace(client_ns, path=URL_PREFIX)
 
 
 @API.errorhandler(APIException)

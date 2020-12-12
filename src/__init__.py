@@ -5,7 +5,9 @@ from flask import Flask
 from src.exceptions import APIException
 from src.helpers import mongo
 from src.views import BLUEPRINT as api
+from mongoengine import *
 
+connect('system_manager', host='localhost', port=27017)
 # instantiate the extensions
 
 

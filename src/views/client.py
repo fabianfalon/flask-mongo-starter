@@ -4,24 +4,24 @@ from flask_restplus import Namespace, Resource, reqparse
 from werkzeug.exceptions import BadRequest
 
 from src.constants import MAX_ELEMENT_PAGINATION
-from src.helpers import response_list, response_item, custom_response
-from src.serializers.system import SystemSchema
-from src.services.systems import system_srv
+from src.helpers import response_list, response_item
+from src.serializers.client import ClientSchema
+from src.services.clients import client_srv
 
-API_SYSTEM = Namespace("systems", description="systems operations")
+API_CLIENT = Namespace("clients", description="clients operations")
 
-TAG_WRAPPER = "system"
-TAG_LIST_WRAPPER = "systems"
+TAG_WRAPPER = "client"
+TAG_LIST_WRAPPER = "clients"
 
-logger = logging.getLogger("systems")
+logger = logging.getLogger("clients")
 
 
-@API_SYSTEM.route("systems")
-class Systems(Resource):
-    @API_SYSTEM.doc(
-        description="Get all systems",
+@API_CLIENT.route("clients")
+class Clients(Resource):
+    @API_CLIENT.doc(
+        description="Get all clients",
         response={
-            200: "Recover all systems",
+            200: "Recover all clients",
         },
         params={
             "paginationKey": {"description": "pagination_key", "type": "integer"},
@@ -29,7 +29,7 @@ class Systems(Resource):
         },
     )
     def get(self):
-        """Get all Systems"""
+        """Get all Clients"""
         parser = reqparse.RequestParser()
         parser.add_argument(
             "pageSize",
@@ -53,12 +53,12 @@ class Systems(Resource):
         params.update({"paginationKey": int(args.get("paginationKey", 1))})
         page_size = params.get("pageSize")
         pagination_key = params.get("paginationKey")
-        systems = system_srv.all(page_size, pagination_key)
-        logger.info("Get all systems")
-        return response_list(TAG_LIST_WRAPPER, systems, serializer=SystemSchema)
+        clients = client_srv.all(page_size, pagination_key)
+        logger.info("Get all clients")
+        return response_list(TAG_LIST_WRAPPER, clients, serializer=ClientSchema)
 
-    # @API_SYSTEM.expect(MODEL_CREATE_USER, description="Input data")
-    @API_SYSTEM.doc(
+    # @API_CLIENT.expect(MODEL_CREATE_USER, description="Input data")
+    @API_CLIENT.doc(
         description="Create system",
         responses={
             201: "System created",
@@ -68,23 +68,23 @@ class Systems(Resource):
     )
     def post(self):
         logger.info("Create system")
-        system_payload = request.get_json()
-        system = system_srv.create(system_payload)
-        data = response_item(TAG_WRAPPER, system, serializer=SystemSchema)
+        client_payload = request.get_json()
+        client = client_srv.create(client_payload)
+        data = response_item(TAG_WRAPPER, client, serializer=ClientSchema)
         return data, 201
 
 
-@API_SYSTEM.route("systems/<systemId>")
+@API_CLIENT.route("clients/<clientId>")
 class SystemDetail(Resource):
-    @API_SYSTEM.doc(
-        description="Get a system detail",
+    @API_CLIENT.doc(
+        description="Get a client detail",
         responses={
-            200: "System detail",
-            404: "System Entity not found",
+            200: "Client detail",
+            404: "Client Entity not found",
         },
     )
     def get(self, **kwargs):
-        system_id = kwargs.get("systemId")
-        system = system_srv.get_by_id(system_id)
-        logger.info("Get system detail")
-        return response_item(TAG_LIST_WRAPPER, system, serializer=SystemSchema)
+        client_id = kwargs.get("clientId")
+        system = client_srv.get_by_id(client_id)
+        logger.info("Get client detail")
+        return response_item(TAG_LIST_WRAPPER, system, serializer=ClientSchema)
