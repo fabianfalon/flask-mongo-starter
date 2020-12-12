@@ -1,14 +1,35 @@
 import logging
+
 from flask import request
-from flask_restplus import Namespace, Resource, reqparse
+from flask_restplus import Namespace, Resource, fields, reqparse
 from werkzeug.exceptions import BadRequest
 
-from src.constants import MAX_ELEMENT_PAGINATION
-from src.helpers import response_list, response_item
+from src.constants import (
+    CLIENT_DESCRIPTION_MAX_LENGTH,
+    CLIENT_NAME_MAX_LENGTH,
+    CLIENT_STATUS_MAX_LENGTH,
+    MAX_ELEMENT_PAGINATION,
+)
+from src.helpers import response_item, response_list
 from src.serializers.client import ClientSchema
 from src.services.clients import client_srv
 
 API_CLIENT = Namespace("clients", description="clients operations")
+
+MODEL_CREATE_CLIENT = API_CLIENT.model(
+    "CreateClient",
+    {
+        "name": fields.String(
+            description="client name", max_length=CLIENT_NAME_MAX_LENGTH
+        ),
+        "description": fields.String(
+            description="client description", max_length=CLIENT_DESCRIPTION_MAX_LENGTH
+        ),
+        "status": fields.String(
+            description="Client status", max_length=CLIENT_STATUS_MAX_LENGTH
+        ),
+    },
+)
 
 TAG_WRAPPER = "client"
 TAG_LIST_WRAPPER = "clients"
@@ -57,7 +78,7 @@ class Clients(Resource):
         logger.info("Get all clients")
         return response_list(TAG_LIST_WRAPPER, clients, serializer=ClientSchema)
 
-    # @API_CLIENT.expect(MODEL_CREATE_USER, description="Input data")
+    @API_CLIENT.expect(MODEL_CREATE_CLIENT, description="Input data")
     @API_CLIENT.doc(
         description="Create system",
         responses={

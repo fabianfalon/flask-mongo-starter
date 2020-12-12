@@ -20,8 +20,13 @@ class Service:
 
     def get_by_id(self, entity_id: int):
         try:
-            return self.entity.objects.with_id(entity_id)
+            entity = self.entity.objects.with_id(entity_id)
+            if not entity:
+                raise ResourceNotFound(
+                    message="Entity with id: {id} not found".format(id=entity_id)
+                )
+            return entity
         except InvalidId:
             raise ResourceNotFound(
-                message="Client with id: {id} not found".format(id=entity_id)
+                message="Entity with id: {id} not found".format(id=entity_id)
             )

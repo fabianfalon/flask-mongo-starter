@@ -1,12 +1,9 @@
 """"
-Service
+System Service
 """
 import logging
 
-from bson.errors import InvalidId
-from bson.objectid import ObjectId
 from src.services.services import Service
-from src.exceptions import ResourceNotFound
 from src.models.system_manager import SystemManager
 
 logger = logging.getLogger("services")
@@ -18,6 +15,7 @@ class SystemServices(Service):
     def create(self, data):
         system = SystemManager(json=data)
         system.save()
+        logger.info("System created successfully")
         return system
 
 

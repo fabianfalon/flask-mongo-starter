@@ -13,6 +13,7 @@ class APIException(Exception):
 
     def to_dict(self):
         rv = dict(self.payload or ())
+        rv["status_code"] = self.status_code
         rv["message"] = self.message
         rv["alias"] = self.aliasError
         return rv

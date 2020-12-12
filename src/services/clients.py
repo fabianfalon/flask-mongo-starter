@@ -1,5 +1,5 @@
 """"
-Service
+Client Service
 """
 import logging
 
@@ -23,6 +23,7 @@ class ClientServices(Service):
             status=data.get("status", "INACTIVE"),
         )
         client.save()
+        logger.info("Client created successfully")
         return client
 
 
