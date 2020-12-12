@@ -7,8 +7,17 @@ from src.helpers import mongo
 from src.views import BLUEPRINT as api
 from mongoengine import *
 
-connect('system_manager', host='localhost', port=27017)
+# connect('system_manager', host='localhost', port=27017) connect without mongo
 # instantiate the extensions
+# connect with mongo
+username = os.getenv("MONGO_USERNAME")
+password = os.getenv("MONGO_PASSWORD")
+host = os.getenv("MONGO_HOST")
+port = os.getenv("MONGO_PORT")
+connect(
+    os.getenv("MONGO_DATABASE"),
+    host=f"mongodb://{username}:{password}@{host}:{port}/?authSource=admin"
+)
 
 
 def create_app(script_info=None):

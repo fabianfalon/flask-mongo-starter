@@ -6,14 +6,20 @@ services:
     build:
       context: .
     volumes:
-      - './src/:/usr/src/app'
+      - '.:/usr/src/app'
     container_name: 'system-manager-api'
     ports:
       - 5000:5000
     environment:
+      - FLASK_DEBUG=1
       - FLASK_ENV=development
       - APP_SETTINGS=src.config.DevelopmentConfig
       - SECRET_KEY=PB3aGvTmCkzaLGRAxDc3aMayKTPTDd5usT8gw4pCmKOk5AlJjh12pTrnNgQyOHCH
+      - MONGO_DATABASE=system_manager
+      - MONGO_USERNAME=root
+      - MONGO_PASSWORD=rootpassword
+      - MONGO_HOST=database
+      - MONGO_PORT=27017
     depends_on:
       - database
 
