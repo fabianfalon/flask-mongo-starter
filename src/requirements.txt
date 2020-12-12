@@ -47,3 +47,4 @@ urllib3==1.25.8
 webencodings==0.5.1
 Werkzeug==0.16.1
 mongoengine==0.21.0
+pyjwt==1.7.1

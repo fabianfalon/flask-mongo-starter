@@ -14,7 +14,7 @@ class ClientServices(Service):
 
     entity = Client
 
-    def create(self, data):
+    def create(self, data: dict):
         if not data.get("name"):
             raise BadRequest(message="name is required")
         client = Client(
@@ -22,6 +22,8 @@ class ClientServices(Service):
             description=data.get("description"),
             status=data.get("status", "INACTIVE"),
         )
+        client.save()
+        client.token = client.encode_auth_token()
         client.save()
         logger.info("Client created successfully")
         return client

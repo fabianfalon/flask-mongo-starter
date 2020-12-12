@@ -7,7 +7,7 @@ from src.constants import MAX_ELEMENT_PAGINATION
 from src.helpers import response_list, response_item, custom_response
 from src.serializers.system import SystemSchema
 from src.services.systems import system_srv
-
+from src.utils import check_token
 API_SYSTEM = Namespace("systems", description="systems operations")
 
 TAG_WRAPPER = "system"
@@ -83,6 +83,7 @@ class SystemDetail(Resource):
             404: "System Entity not found",
         },
     )
+    @check_token
     def get(self, **kwargs):
         system_id = kwargs.get("systemId")
         system = system_srv.get_by_id(system_id)

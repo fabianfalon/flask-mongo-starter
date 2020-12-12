@@ -6,7 +6,7 @@ class BaseConfig:
 
     DEBUG = False
     TESTING = False
-    SECRET_KEY = os.environ.get("SECRET_KEY")
+    SECRET_KEY = "PB3aGvTmCkzaLGRAxDc3aMayKTPTDd5usT8gw4pCmKOk5AlJjh12pTrnNgQyOHCH"
     DEBUG_TB_ENABLED = False
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 

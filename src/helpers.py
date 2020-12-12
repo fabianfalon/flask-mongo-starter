@@ -1,6 +1,5 @@
 import json
 from bson import json_util
-
 from flask_pymongo import PyMongo
 
 from src.serializers.common import PaginationSchema

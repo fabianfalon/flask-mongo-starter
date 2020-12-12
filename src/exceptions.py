@@ -33,3 +33,9 @@ class BadRequest(APIException):
     status_code = 400
     message = "Bad Request"
     aliasError = "BadRequest"
+
+
+class Unauthorized(APIException):
+    status_code = 401
+    message = "Unauthorized"
+    aliasError = "Unauthorized"
