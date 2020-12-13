@@ -6,4 +6,5 @@ class ClientSchema(Schema):
     name = fields.Str()
     description = fields.Str()
     status = fields.Str()
+    token = fields.Str()
     created = fields.Str()
