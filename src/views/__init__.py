@@ -13,7 +13,7 @@ BLUEPRINT = Blueprint("api", __name__)
 
 API = Api(
     BLUEPRINT,
-    title="Systems Microservice",
+    title="Systems Manager Microservice",
     version=API_VERSION,
     description="Microservice to system manager",
     add_specs=True,

@@ -13,8 +13,13 @@ from src.constants import (
 from src.helpers import response_item, response_list
 from src.serializers.client import ClientSchema
 from src.services.clients import client_srv
+from src.utils import check_token, authorizations
 
-API_CLIENT = Namespace("clients", description="clients operations")
+
+API_CLIENT = Namespace(
+    "clients", description="clients operations",
+    security="apiKey", authorizations=authorizations
+)
 
 MODEL_CREATE_CLIENT = API_CLIENT.model(
     "CreateClient",
@@ -98,12 +103,14 @@ class Clients(Resource):
 @API_CLIENT.route("clients/<clientId>")
 class SystemDetail(Resource):
     @API_CLIENT.doc(
+        security="Bearer",
         description="Get a client detail",
         responses={
             200: "Client detail",
             404: "Client Entity not found",
         },
     )
+    @check_token
     def get(self, **kwargs):
         client_id = kwargs.get("clientId")
         system = client_srv.get_by_id(client_id)

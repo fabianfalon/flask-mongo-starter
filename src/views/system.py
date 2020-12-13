@@ -4,11 +4,15 @@ from flask_restplus import Namespace, Resource, reqparse
 from werkzeug.exceptions import BadRequest
 
 from src.constants import MAX_ELEMENT_PAGINATION
-from src.helpers import response_list, response_item, custom_response
+from src.helpers import response_list, response_item
 from src.serializers.system import SystemSchema
 from src.services.systems import system_srv
-from src.utils import check_token
-API_SYSTEM = Namespace("systems", description="systems operations")
+from src.utils import check_token, authorizations
+
+API_SYSTEM = Namespace(
+    "systems", description="systems operations",
+    security="apiKey", authorizations=authorizations
+)
 
 TAG_WRAPPER = "system"
 TAG_LIST_WRAPPER = "systems"
@@ -19,6 +23,7 @@ logger = logging.getLogger("systems")
 @API_SYSTEM.route("systems")
 class Systems(Resource):
     @API_SYSTEM.doc(
+        security="Bearer",
         description="Get all systems",
         response={
             200: "Recover all systems",
@@ -27,7 +32,9 @@ class Systems(Resource):
             "paginationKey": {"description": "pagination_key", "type": "integer"},
             "pageSize": {"description": "pagination_size", "type": "integer"},
         },
+
     )
+    @check_token
     def get(self):
         """Get all Systems"""
         parser = reqparse.RequestParser()
@@ -57,8 +64,8 @@ class Systems(Resource):
         logger.info("Get all systems")
         return response_list(TAG_LIST_WRAPPER, systems, serializer=SystemSchema)
 
-    # @API_SYSTEM.expect(MODEL_CREATE_USER, description="Input data")
     @API_SYSTEM.doc(
+        security="Bearer",
         description="Create system",
         responses={
             201: "System created",
@@ -77,6 +84,7 @@ class Systems(Resource):
 @API_SYSTEM.route("systems/<systemId>")
 class SystemDetail(Resource):
     @API_SYSTEM.doc(
+        security="Bearer",
         description="Get a system detail",
         responses={
             200: "System detail",
