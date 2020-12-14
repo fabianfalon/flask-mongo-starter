@@ -45,14 +45,13 @@ class SystemServices(Service):
         return system
 
     def get_by_id(self, entity_id: str):
+        entity = self._get_system(entity_id)
+        return entity
+
+    @staticmethod
+    def _get_system(entity_id):
         try:
             entity = SystemManager.objects.with_id(entity_id)
-            breakpoint()
-            if not entity:
-                raise ResourceNotFound(
-                    message="Entity with id: {id} not found".format(id=entity_id)
-                )
-            return entity
         except ValidationError:
             # search with emei
             try:
@@ -61,13 +60,23 @@ class SystemServices(Service):
                 entity = SystemManager.objects(enclosureSerialNumber=str(entity_id)).get()
             except Exception:
                 entity = None
-
         if not entity:
             raise ResourceNotFound(
                 message="Entity with this parameter: {id} not found".format(
                     id=entity_id
                 )
             )
+        return entity
+
+    def update(self, entity_id, data):
+        sku = data.pop("SKU")
+        emei = data.pop("EMEI")
+        external_id = data.pop("id")
+        data["external_id"] = external_id
+        data["emei"] = emei
+        data["sku"] = sku
+        SystemManager.objects(id=str(entity_id)).update(**data)
+        entity = SystemManager.objects.with_id(entity_id)
         return entity
 
 

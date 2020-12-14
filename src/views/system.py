@@ -123,3 +123,21 @@ class SystemDetail(Resource):
         system = system_srv.get_by_id(system_id)
         logger.info("Get system detail")
         return response_item(TAG_LIST_WRAPPER, system, serializer=SystemSchema)
+
+    @API_SYSTEM.expect(MODEL_CREATE_SYSTEM, description="Input data")
+    @API_SYSTEM.doc(
+        security="Bearer",
+        description="Create system",
+        responses={
+            200: "System updated",
+            400: "Input data wrong",
+            500: "Internal Server Error",
+        },
+    )
+    def put(self, **kwargs):
+        system_id = kwargs.get("systemId")
+        logger.info("Create system")
+        system_payload = request.get_json()
+        system = system_srv.update(system_id, system_payload)
+        data = response_item(TAG_WRAPPER, system, serializer=SystemSchema)
+        return data, 200
