@@ -1,6 +1,6 @@
 import logging
 from flask import request
-from flask_restplus import Namespace, Resource, reqparse
+from flask_restplus import Namespace, Resource, fields, reqparse
 from werkzeug.exceptions import BadRequest
 
 from src.constants import MAX_ELEMENT_PAGINATION
@@ -13,6 +13,31 @@ API_SYSTEM = Namespace(
     "systems", description="systems operations",
     security="apiKey", authorizations=authorizations
 )
+
+MODEL_CREATE_SYSTEM = API_SYSTEM.model(
+    "CreateSystem",
+    {
+        "id": fields.String(),
+        "vendor": fields.String(),
+        "sku": fields.String(),
+        "emei": fields.String(),
+        "simSerialNumber": fields.String(),
+        "enclosureSerialNumber": fields.String(),
+        "workingState": fields.String(),
+        "createdAt": fields.String(),
+        "setupStatus": fields.String(),
+        "installerId": fields.String(),
+        "installerName": fields.String(),
+        "companyId": fields.String(),
+        "companyName": fields.String(),
+        "devices": fields.List(fields.Raw()),
+        "solarStrings": fields.List(fields.Raw()),
+        "systemConfig": fields.Raw(),
+        "location": fields.Raw(),
+        "created": fields.DateTime()
+    },
+)
+
 
 TAG_WRAPPER = "system"
 TAG_LIST_WRAPPER = "systems"
@@ -64,6 +89,7 @@ class Systems(Resource):
         logger.info("Get all systems")
         return response_list(TAG_LIST_WRAPPER, systems, serializer=SystemSchema)
 
+    @API_SYSTEM.expect(MODEL_CREATE_SYSTEM, description="Input data")
     @API_SYSTEM.doc(
         security="Bearer",
         description="Create system",

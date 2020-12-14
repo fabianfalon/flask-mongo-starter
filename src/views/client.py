@@ -45,6 +45,7 @@ logger = logging.getLogger("clients")
 @API_CLIENT.route("clients")
 class Clients(Resource):
     @API_CLIENT.doc(
+        security="Bearer",
         description="Get all clients",
         response={
             200: "Recover all clients",
@@ -54,6 +55,7 @@ class Clients(Resource):
             "pageSize": {"description": "pagination_size", "type": "integer"},
         },
     )
+    @check_token
     def get(self):
         """Get all Clients"""
         parser = reqparse.RequestParser()
