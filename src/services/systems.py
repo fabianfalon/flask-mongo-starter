@@ -69,10 +69,14 @@ class SystemServices(Service):
         return entity
 
     def update(self, entity_id, data):
-        sku = data.pop("SKU")
-        emei = data.pop("EMEI")
+        sku = data.pop("SKU") if data.get("SKU") else data.pop("sku")
+        emei = data.pop("EMEI") if data.get("EMEI") else data.pop("emei")
         data["emei"] = emei
         data["sku"] = sku
+        if "createdAt" in data:
+            data.pop("createdAt")
+        if "id" in data:
+            data.pop("id")
         SystemManager.objects(id=str(entity_id)).update(**data)
         entity = SystemManager.objects.with_id(entity_id)
         return entity
