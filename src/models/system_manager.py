@@ -12,6 +12,7 @@ class SystemManager(Document):
     workingState = StringField(required=False)
     createdAt = StringField(required=False)
     setupStatus = StringField(required=False)
+    setupState = StringField(required=False)
     pendingSystemStatus = StringField(required=False)
     systemId = StringField(required=False)
     installerId = StringField(required=False)

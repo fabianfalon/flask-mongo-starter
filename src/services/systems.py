@@ -38,7 +38,9 @@ class SystemServices(Service):
             devices=data.get("devices", []),
             location=data.get("location", {}),
             solarStrings=data.get("solarStrings", []),
-            systemConfig=data.get("systemConfig", {})
+            systemConfig=data.get("systemConfig", {}),
+            setupState=data.get("setupState"),
+            setupStatus=data.get("setupStatus")
         )
         system.save()
         logger.info("System created successfully")

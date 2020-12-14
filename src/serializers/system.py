@@ -13,6 +13,7 @@ class SystemSchema(Schema):
     workingState = fields.Str()
     createdAt = fields.Str()
     setupStatus = fields.Str()
+    setupState = fields.Str()
     installerId = fields.Str()
     installerName = fields.Str()
     companyId = fields.Str()
@@ -22,4 +23,3 @@ class SystemSchema(Schema):
     systemConfig = fields.Dict()
     location = fields.Dict()
     created = fields.Str()
-
