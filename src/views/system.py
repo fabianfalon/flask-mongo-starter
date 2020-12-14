@@ -134,6 +134,7 @@ class SystemDetail(Resource):
             500: "Internal Server Error",
         },
     )
+    @check_token
     def put(self, **kwargs):
         system_id = kwargs.get("systemId")
         logger.info("Create system")
