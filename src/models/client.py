@@ -28,9 +28,8 @@ class Client(Document):
         try:
             payload = {
                 'iat': datetime.utcnow(),
-                "payload": {"id": str(self.id), "status": self.status}
+                "payload": {"external_id": self.internal_id, "status": self.status}
             }
-            breakpoint()
             token = jwt.encode(
                 payload,
                 current_app.config.get("SECRET_KEY"),
@@ -49,7 +48,7 @@ class Client(Document):
         try:
             payload = jwt.decode(token, current_app.config.get("SECRET_KEY"))
             client_data = payload.get("payload")
-            if client_data.get("status") == ACTIVE and client_data.get("id"):
+            if client_data.get("status") == ACTIVE and client_data.get("external_id"):
                 return payload
             else:
                 raise Unauthorized(message="Client Inactive.")
