@@ -4,7 +4,6 @@ from marshmallow import Schema, fields
 class SystemSchema(Schema):
 
     id = fields.Str()
-    external_id = fields.Str()
     vendor = fields.Str()
     sku = fields.Str()
     emei = fields.Str()
@@ -22,4 +21,3 @@ class SystemSchema(Schema):
     solarStrings = fields.List(fields.Dict())
     systemConfig = fields.Dict()
     location = fields.Dict()
-    created = fields.Str()

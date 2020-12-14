@@ -21,9 +21,8 @@ class SystemServices(Service):
         emei = data.get("EMEI") if data.get("EMEI") else data.get("emei")
 
         system = SystemManager(
-            external_id=data.get("id"),
-            installerId=data.get("installerId"),
-            installerName=data.get("installerName"),
+            installerId=data.get("installerId", ""),
+            installerName=data.get("installerName", ""),
             enclosureSerialNumber=data.get("enclosureSerialNumber", ""),
             workingState=data.get("workingState", ""),
             simSerialNumber=data.get("simSerialNumber", ""),
@@ -31,16 +30,15 @@ class SystemServices(Service):
             systemId=data.get("systemId", ""),
             companyId=data.get("companyId", ""),
             companyName=data.get("companyName", ""),
-            createdAt=data.get("createdAt"),
-            vendor=data.get("vendor"),
+            vendor=data.get("vendor", ""),
             sku=sku,
             emei=emei,
             devices=data.get("devices", []),
             location=data.get("location", {}),
             solarStrings=data.get("solarStrings", []),
             systemConfig=data.get("systemConfig", {}),
-            setupState=data.get("setupState"),
-            setupStatus=data.get("setupStatus")
+            setupState=data.get("setupState", ""),
+            setupStatus=data.get("setupStatus", "")
         )
         system.save()
         logger.info("System created successfully")
@@ -73,8 +71,6 @@ class SystemServices(Service):
     def update(self, entity_id, data):
         sku = data.pop("SKU")
         emei = data.pop("EMEI")
-        external_id = data.pop("id")
-        data["external_id"] = external_id
         data["emei"] = emei
         data["sku"] = sku
         SystemManager.objects(id=str(entity_id)).update(**data)

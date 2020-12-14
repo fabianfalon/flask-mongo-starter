@@ -3,14 +3,12 @@ from datetime import datetime
 
 
 class SystemManager(Document):
-    external_id = StringField(required=False)
     vendor = StringField(required=False)
     sku = StringField(required=False)
     emei = StringField(required=False)
     simSerialNumber = StringField(required=False)
     enclosureSerialNumber = StringField(required=False)
     workingState = StringField(required=False)
-    createdAt = StringField(required=False)
     setupStatus = StringField(required=False)
     setupState = StringField(required=False)
     pendingSystemStatus = StringField(required=False)
@@ -23,4 +21,4 @@ class SystemManager(Document):
     solarStrings = ListField(required=False)
     systemConfig = DictField(required=False)
     location = DictField(required=False)
-    created = DateTimeField(default=datetime.now)
+    createdAt = DateTimeField(default=datetime.now)
