@@ -15,12 +15,12 @@ logger = logging.getLogger("services")
 class SystemServices(Service):
     entity = SystemManager
 
-    def create(self, data):
+    def create(self, data: dict) -> SystemManager:
 
         sku = data.get("SKU") if data.get("SKU") else data.get("sku")
         emei = data.get("EMEI") if data.get("EMEI") else data.get("emei")
 
-        system = SystemManager(
+        system = self.entity(
             installerId=data.get("installerId", ""),
             installerName=data.get("installerName", ""),
             enclosureSerialNumber=data.get("enclosureSerialNumber", ""),
@@ -40,16 +40,16 @@ class SystemServices(Service):
             setupState=data.get("setupState", ""),
             setupStatus=data.get("setupStatus", "")
         )
-        system.save()
+        entity = system.save()
         logger.info("System created successfully")
-        return system
+        return entity
 
-    def get_by_id(self, entity_id: str):
+    def get_system_by_id(self, entity_id: str) -> SystemManager:
         entity = self._get_system(entity_id)
         return entity
 
     @staticmethod
-    def _get_system(entity_id):
+    def _get_system(entity_id: str) -> SystemManager:
         try:
             entity = SystemManager.objects.with_id(entity_id)
         except ValidationError:
@@ -68,17 +68,24 @@ class SystemServices(Service):
             )
         return entity
 
-    def update(self, entity_id, data):
+    @staticmethod
+    def _clean_system_payload(data: dict) -> dict:
         sku = data.pop("SKU") if data.get("SKU") else data.pop("sku")
         emei = data.pop("EMEI") if data.get("EMEI") else data.pop("emei")
+
         data["emei"] = emei
         data["sku"] = sku
+
         if "createdAt" in data:
             data.pop("createdAt")
         if "id" in data:
             data.pop("id")
-        SystemManager.objects(id=str(entity_id)).update(**data)
-        entity = SystemManager.objects.with_id(entity_id)
+        return data
+
+    def update(self, entity_id: str, data: dict) -> SystemManager:
+        data = self._clean_system_payload(data)
+        self.entity.objects(id=str(entity_id)).update(**data)
+        entity = self.get_by_id(entity_id)
         return entity
 
 

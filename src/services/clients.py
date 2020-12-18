@@ -14,10 +14,10 @@ class ClientServices(Service):
 
     entity = Client
 
-    def create(self, data: dict):
+    def create(self, data: dict) -> Client:
         if not data.get("name"):
             raise BadRequest(message="name is required")
-        client = Client(
+        client = self.entity(
             internal_id=str(uuid.uuid4()),
             name=data.get("name"),
             description=data.get("description"),
