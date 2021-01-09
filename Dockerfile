@@ -17,6 +17,9 @@ RUN pip install -r requirements.txt
 COPY ./entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
+COPY ./run_consumer.sh /app/run_consumer.sh
+RUN chmod +x /app/run_consumer.sh
+
 # add app
 COPY . /app
 

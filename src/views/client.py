@@ -17,8 +17,10 @@ from src.utils import check_token, authorizations
 
 
 API_CLIENT = Namespace(
-    "clients", description="clients operations",
-    security="apiKey", authorizations=authorizations
+    "clients",
+    description="clients operations",
+    security="apiKey",
+    authorizations=authorizations,
 )
 
 MODEL_CREATE_CLIENT = API_CLIENT.model(

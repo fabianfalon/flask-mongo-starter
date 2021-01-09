@@ -38,7 +38,7 @@ class SystemServices(Service):
             solarStrings=data.get("solarStrings", []),
             systemConfig=data.get("systemConfig", {}),
             setupState=data.get("setupState", ""),
-            setupStatus=data.get("setupStatus", "")
+            setupStatus=data.get("setupStatus", ""),
         )
         entity = system.save()
         logger.info("System created successfully")
@@ -57,7 +57,9 @@ class SystemServices(Service):
             try:
                 entity = SystemManager.objects(emei=str(entity_id)).get()
             except Exception:
-                entity = SystemManager.objects(enclosureSerialNumber=str(entity_id)).get()
+                entity = SystemManager.objects(
+                    enclosureSerialNumber=str(entity_id)
+                ).get()
             except Exception:
                 entity = None
         if not entity:

@@ -9,6 +9,9 @@ class BaseConfig:
     SECRET_KEY = "PB3aGvTmCkzaLGRAxDc3aMayKTPTDd5usT8gw4pCmKOk5AlJjh12pTrnNgQyOHCH"
     DEBUG_TB_ENABLED = False
     DEBUG_TB_INTERCEPT_REDIRECTS = False
+    RABBIT_HOSTNAME = "rabbit"
+    RABBIT_PORT = 5672
+    RABBIT_EXCHANGE = "my_exchange"
 
 
 class DevelopmentConfig(BaseConfig):
