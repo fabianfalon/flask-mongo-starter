@@ -2,12 +2,12 @@ version: '3'
 
 services:
 
-  system_manager:
+  system_manager:  &system_manager
     build:
       context: .
     volumes:
       - '.:/usr/src/app'
-    container_name: 'system-manager-api'
+    container_name: 'system_manager_api'
     ports:
       - 5000:5000
     environment:
@@ -20,12 +20,14 @@ services:
       - MONGO_PASSWORD=rootpassword
       - MONGO_HOST=database
       - MONGO_PORT=27017
+      - RABBITMQ_USER=rootuser
+      - RABBITMQ_PASS=mypassverystrong
     depends_on:
       - database
 
   database:
     image: mongo:latest
-    container_name: 'system-manager-mongo'
+    container_name: 'system_manager_mongo'
     environment:
       MONGO_INITDB_DATABASE: system_manager
       MONGO_INITDB_ROOT_USERNAME: root
@@ -34,6 +36,28 @@ services:
       - 27017:27017
     volumes:
       - mongodb_data_container:/data/db
+
+  rabbit:
+    hostname: rabbit
+    image: "rabbitmq:3-management"
+    environment:
+      - RABBITMQ_DEFAULT_USER=rootuser
+      - RABBITMQ_DEFAULT_PASS=mypassverystrong
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  consumer:
+    <<: *system_manager
+    container_name: 'system_manager_consumer'
+    command: "./run_consumer.sh"
+    ports:
+      - 5001:5000
+    depends_on:
+      - rabbit
+      - database
+      - system_manager
+
 
 volumes:
   mongodb_data_container:

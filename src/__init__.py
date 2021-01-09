@@ -13,9 +13,10 @@ username = os.getenv("MONGO_USERNAME")
 password = os.getenv("MONGO_PASSWORD")
 host = os.getenv("MONGO_HOST")
 port = os.getenv("MONGO_PORT")
+
 connect(
     os.getenv("MONGO_DATABASE"),
-    host=f"mongodb://{username}:{password}@{host}:{port}/?authSource=admin"
+    host=f"mongodb://{username}:{password}@{host}:{port}/?authSource=admin",
 )
 
 
@@ -28,7 +29,9 @@ def create_app(script_info=None):
     app.config.from_object(app_settings)
     app.config["MONGO_DBNAME"] = "system_manager"
     app.config["MONGO_URI"] = "mongodb://localhost:27017/system_manager"
-    app.config["SECRET_KEY"] = "PB3aGvTmCkzaLGRAxDc3aMayKTPTDd5usT8gw4pCmKOk5AlJjh12pTrnNgQyOHCH"
+    app.config[
+        "SECRET_KEY"
+    ] = "PB3aGvTmCkzaLGRAxDc3aMayKTPTDd5usT8gw4pCmKOk5AlJjh12pTrnNgQyOHCH"
 
     mongo.init_app(app)
     # register blueprints

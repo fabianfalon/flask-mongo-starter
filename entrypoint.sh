@@ -1,3 +1,3 @@
 #!/bin/sh
 
-gunicorn --bind 0.0.0.0:5000 manage:app -w 2
+python manage.py run -h 0.0.0.0 -debug=True

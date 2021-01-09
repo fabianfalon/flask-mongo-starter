@@ -27,13 +27,11 @@ class Client(Document):
     def encode_token(self):
         try:
             payload = {
-                'iat': datetime.utcnow(),
-                "payload": {"external_id": self.internal_id, "status": self.status}
+                "iat": datetime.utcnow(),
+                "payload": {"external_id": self.internal_id, "status": self.status},
             }
             token = jwt.encode(
-                payload,
-                current_app.config.get("SECRET_KEY"),
-                algorithm='HS256'
+                payload, current_app.config.get("SECRET_KEY"), algorithm="HS256"
             )
             return token.decode("utf-8")
         except Exception as e:

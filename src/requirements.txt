@@ -49,3 +49,4 @@ Werkzeug==0.16.1
 mongoengine==0.21.0
 pyjwt==1.7.1
 gunicorn==20.0.4
+pika==1.1.0

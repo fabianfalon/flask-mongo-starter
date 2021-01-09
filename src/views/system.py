@@ -1,8 +1,11 @@
 import logging
+import json
 from flask import request
 from flask_restplus import Namespace, Resource, fields, reqparse
 from werkzeug.exceptions import BadRequest
+from src.config import BaseConfig
 
+from src.bus.publisher import Publisher
 from src.constants import MAX_ELEMENT_PAGINATION
 from src.helpers import response_list, response_item
 from src.serializers.system import SystemSchema
@@ -10,8 +13,10 @@ from src.services.systems import system_srv
 from src.utils import check_token, authorizations
 
 API_SYSTEM = Namespace(
-    "systems", description="systems operations",
-    security="apiKey", authorizations=authorizations
+    "systems",
+    description="systems operations",
+    security="apiKey",
+    authorizations=authorizations,
 )
 
 MODEL_CREATE_SYSTEM = API_SYSTEM.model(
@@ -34,13 +39,21 @@ MODEL_CREATE_SYSTEM = API_SYSTEM.model(
         "solarStrings": fields.List(fields.Raw()),
         "systemConfig": fields.Raw(),
         "location": fields.Raw(),
-        "created": fields.DateTime()
+        "created": fields.DateTime(),
     },
 )
 
 
 TAG_WRAPPER = "system"
 TAG_LIST_WRAPPER = "systems"
+
+config = BaseConfig()
+
+config_rabbit = {
+    "host": config.RABBIT_HOSTNAME,
+    "port": config.RABBIT_PORT,
+    "exchange": config.RABBIT_EXCHANGE,
+}
 
 logger = logging.getLogger("systems")
 
@@ -57,7 +70,6 @@ class Systems(Resource):
             "paginationKey": {"description": "pagination_key", "type": "integer"},
             "pageSize": {"description": "pagination_size", "type": "integer"},
         },
-
     )
     @check_token
     def get(self):
@@ -141,4 +153,7 @@ class SystemDetail(Resource):
         system_payload = request.get_json()
         system = system_srv.update(system_id, system_payload)
         data = response_item(TAG_WRAPPER, system, serializer=SystemSchema)
+        message = json.dumps(data)
+        publisher = Publisher(config_rabbit)
+        publisher.publish("update_message_topic", message)
         return data, 200

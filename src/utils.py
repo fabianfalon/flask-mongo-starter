@@ -19,6 +19,7 @@ def check_token(f):
         if not token:
             raise Unauthorized(message="Provide a valid auth token.")
         return f(*args, **kwargs)
+
     return decorated
 
 
